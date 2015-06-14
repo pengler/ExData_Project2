@@ -2,7 +2,6 @@ require(plyr)
 require(ggplot2)
 
 NEI <- readRDS("summarySCC_PM25.rds")
-#SCC <- readRDS("Source_Classification_Code.rds")
 NEI <- NEI[NEI$fips=="24510",]
 
 emissionsByType<-ddply(NEI, c("year", "type"), function(x) colSums(x[c("Emissions")]))
