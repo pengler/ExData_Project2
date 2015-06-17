@@ -4,8 +4,10 @@ require(ggplot2)
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
-# Filter for motor vehicle emissions
-motorVehicleSources<-SCC[grep ("^Mobile - On-Road",SCC$EI.Sector),]$SCC
+# Filter for motor vehicle emissions in Baltimore and LA
+
+# Assume that the EI.Sector values that start with "Mobile" are considered motor vehichles
+motorVehicleSources<-SCC[grep ("^Mobile - ",SCC$EI.Sector),]$SCC
 NEI <- NEI[NEI$fips=="24510"|NEI$fips=="06037",]
 NEI <- subset(NEI, SCC %in% motorVehicleSources)
 
@@ -34,13 +36,15 @@ p <- ggplot(data=emissionsByFips, aes(x=unique(emissionsByFips[,"year"]))) +
               fill="Red", 
               alpha=.1) +
   annotate ("text",
-            y=(laMax+laMin)/2-450,x=mean(emissionsByFips[,"year"]),
+            y=(laMax+laMin)/2-1900,x=mean(emissionsByFips[,"year"]),
             label=paste("Delta in LA Emissions =", laDelta,"tons")) +
   annotate ("text",
-            y=(baltimoreMax+baltimoreMin)/2+250,x=mean(emissionsByFips[,"year"]),
+            y=(baltimoreMax+baltimoreMin)/2-500,x=mean(emissionsByFips[,"year"]),
             label=paste("Delta in Baltimore Emissions =", baltimoreDelta,"tons")) +
   labs(title = "Baltimore vs LA Changes in Emissions")  +
   xlab("Year") +
   ylab("Emissions (tons)")
 
 print(p)
+dev.copy(png,filename="plot6.png")
+dev.off()

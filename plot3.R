@@ -16,3 +16,5 @@ p<-qplot(year,
       main="PM2.5 Emissions for Baltimore by Source Type")
 
 print(p)
+dev.copy(png,filename="plot3.png")
+dev.off()
